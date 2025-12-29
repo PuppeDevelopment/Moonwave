@@ -1,0 +1,16 @@
+[build]
+target = "aarch64-linux-android"
+
+[target.aarch64-linux-android]
+ar = "C:/NDK/toolchains/llvm/prebuilt/windows-x86_64/bin/aarch64-linux-android-ar.exe" # mein ndk path replace with urs
+linker = "C:/NDK/toolchains/llvm/prebuilt/windows-x86_64/bin/aarch64-linux-android21-clang.cmd" # mein ndk path replace with urs
+rustflags = [
+    "-C", "link-arg=-landroid",
+    "-C", "link-arg=-llog",
+    "-C", "link-arg=-lc++_shared",
+    "-C", "link-arg=-static-libgcc",
+]
+
+[unstable]
+build-std = ["core", "compiler_builtins", "alloc", "std"]
+build-std-features = ["compiler-builtins-mem"]

@@ -1,0 +1,15 @@
+[package]
+name = "moonwave"
+version = "1.0.0"
+edition = "2024"
+
+[lib]
+name = "moonwave"
+crate-type = ["cdylib"]
+
+[dependencies]
+ndk = "0.7"
+log = "0.4"
+ctor = "0.1"
+android_logger = "0.11"
+curl-sys = { version = "0.4", default-features = false }
