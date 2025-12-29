@@ -4,6 +4,7 @@ mod hooking;
 mod opts;
 mod curl_hook;
 mod url;
+mod partyhub;
 use log::info;
 use ctor::ctor;
 
