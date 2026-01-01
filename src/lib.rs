@@ -22,6 +22,8 @@ fn main() {
     });
 
     if opts::USE_EOS {
-        // TODO: EOS
+        std::thread::spawn(|| unsafe {
+            hooking::init_eos_hook();
+        });
     }
 }

@@ -3,7 +3,7 @@ use std::ffi::CString;
 use crate::opts;
 use crate::dobby::DobbyHook;
 use log::{error, info};
-use crate::curl_hook::{setopt_hook};
+use crate::curl_hook::{eos_setopt_hook, setopt_hook};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -43,7 +43,7 @@ pub unsafe fn init_ue_hook() {
             return;
         }
 
-        curl_easy_setopt = (base + 0xB594608) as *mut c_void;
+        curl_easy_setopt = (base + 0x12DB8640) as *mut c_void; // set this address based on ur version
         info!("Found curl_easy_setopt at {:p}", curl_easy_setopt);
     }
 
@@ -60,12 +60,38 @@ pub unsafe fn init_ue_hook() {
     }
 }
 
-// TODO: EOS Hook
-/*
 pub unsafe fn init_eos_hook() {
-  
+    info!("Loading EOS lib...");
+    let lib_name = CString::new("libEOSSDK.so").unwrap();
+    let handle = unsafe { dlopen(lib_name.as_ptr(), RTLD_NOW) };
+    if handle.is_null() {
+        error!("Failed to load EOS lib");
+        return;
+    }
+
+    let base = get_module_base(lib_name.to_str().expect("yes i love rust compiler"));
+    // AGAIN IMPOSSIBLE!!!!!!!!!!!
+    if base == 0 {
+        error!("Failed to find libEOSSDK.so base");
+        unsafe { dlclose(handle) };
+        return;
+    }
+
+    let mut curl_easy_setopt = (base + 0x1988998) as *mut c_void; // set this address based on ur version
+    info!("Found curl_easy_setopt at {:p}", curl_easy_setopt);
+
+    let result = unsafe { DobbyHook(
+        curl_easy_setopt,
+        eos_setopt_hook as *mut c_void,
+        &raw mut crate::curl_hook::EOS_OG_SETOPT as *mut _ as *mut *mut c_void,
+    ) };
+
+    if result == 0 {
+        info!("Successfully hooked eos's curl_easy_setopt");
+    } else {
+        error!("Failed to hook eos's curl_easy_setopt");
+    }
 }
-*/
 
 // ud modulebase finder
 pub fn get_module_base(lib_name: &str) -> usize {
