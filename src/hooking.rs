@@ -4,6 +4,8 @@ use crate::opts;
 use crate::dobby::DobbyHook;
 use log::{error, info};
 use crate::curl_hook::{setopt_hook};
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 
 unsafe extern "C" {
     fn dlopen(filename: *const c_char, flag: c_int) -> *mut c_void;
@@ -15,7 +17,7 @@ const RTLD_NOW: c_int = 2;
 
 pub unsafe fn init_ue_hook() {
     info!("Loading Unreal lib...");
-    let lib_name = CString::new("libUE4.so").unwrap(); // change this to libUnreal.so if ur doing s19+
+    let lib_name = CString::new("libUnreal.so").unwrap(); // change this to libUnreal.so if ur doing s19+
     let handle = unsafe { dlopen(lib_name.as_ptr(), RTLD_NOW) };
     if handle.is_null() {
         error!("Failed to load Unreal lib");
@@ -24,8 +26,7 @@ pub unsafe fn init_ue_hook() {
 
     let mut curl_easy_setopt: *mut c_void = std::ptr::null_mut();
     if opts::USE_CURL_SYMBOL {
-        let sym_name = CString::new("curl_easy_setopt").unwrap();
-        curl_easy_setopt = unsafe { dlsym(handle, sym_name.as_ptr()) };
+        curl_easy_setopt = unsafe { dlsym(handle, CString::new("curl_easy_setopt").unwrap().as_ptr()) };
         if curl_easy_setopt.is_null() {
             error!("Failed to find curl_easy_setopt symbol");
             unsafe { dlclose(handle) };
@@ -33,7 +34,18 @@ pub unsafe fn init_ue_hook() {
         }
 
         info!("Found curl_easy_setopt at {:p}", curl_easy_setopt);
-    } // TODO: add address handling for 18.40+
+    } else {
+        let base = get_module_base(lib_name.to_str().expect("yes i love rust compiler"));
+        // IMPOSSIBLE!!!!!!!!!!!
+        if base == 0 {
+            error!("Failed to find libUnreal.so base");
+            unsafe { dlclose(handle) };
+            return;
+        }
+
+        curl_easy_setopt = (base + 0xB594608) as *mut c_void;
+        info!("Found curl_easy_setopt at {:p}", curl_easy_setopt);
+    }
 
     let result = unsafe { DobbyHook(
         curl_easy_setopt,
@@ -54,3 +66,26 @@ pub unsafe fn init_eos_hook() {
   
 }
 */
+
+// ud modulebase finder
+pub fn get_module_base(lib_name: &str) -> usize {
+    let file = match File::open("/proc/self/maps") {
+        Ok(f) => f,
+        Err(_) => return 0,
+    };
+
+    let reader = BufReader::new(file);
+    for line in reader.lines().flatten() {
+        if line.contains(lib_name) {
+            if let Some(range) = line.split_whitespace().next() {
+                if let Some(start) = range.split('-').next() {
+                    if let Ok(base) = usize::from_str_radix(start, 16) {
+                        return base;
+                    }
+                }
+            }
+        }
+    }
+
+    0
+}
