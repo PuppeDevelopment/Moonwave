@@ -108,7 +108,7 @@ unsafe extern "C" fn can_init_with_request(_cls: *mut Class, _cmd: Sel, request:
         "ol.epicgames.net",
         "on.epicgames.com",
         "ak.epicgames.com",
-        "epicgames.dev",
+        "epicgames.dev"
     ];
     
     for &domain in EPIC_DOMAINS.iter() {
