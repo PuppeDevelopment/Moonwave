@@ -1,17 +1,22 @@
 # Moonwave - Android
+
 **Moonwave** is a **Fortnite** mobile redirect made to redirect **Epic Games** requests to a set **URL** by hooking **curl_easy_setopt** and the first ever mobile redirect made in **Rust** (let alone a Rust redirect but whatever).
 
 ## Requirements
+
 - **Rust**: to use this.
 - **NDK**: to build.
 - **libc++_shared.so** (for some builds): for this to work.
 - **IDA Knowledge**: for 18.40+ and i won't help you get the offsets figure it out
 
 ## How to build
+
 To build the redirect just run ```cargo build --release --target aarch64-linux-android``` in a **Terminal** and you should find the lib under ``target/aarch64-linux-android/release/libmoonwave.so``
 
 ## How to inject into the APK
+
 Put **libmoonwave.so** and **libc++_shared.so** inside ``libs/arm64-v8a/`` in the apk and go to ``smali/com/epicgames/ue4 or unreal/GameActivity.smali`` and do this
+
 ```diff
 .method public onCreate(Landroid/os/Bundle;)V
     .locals 11
@@ -24,6 +29,7 @@ Put **libmoonwave.so** and **libc++_shared.so** inside ``libs/arm64-v8a/`` in th
 ```
 
 Optional (disables minimal system requirements)
+
 ```diff
 .method private processSystemInfo(Ljava/lang/String;Ljava/lang/String;)Z
     .locals 29
@@ -35,7 +41,10 @@ Optional (disables minimal system requirements)
 ```
 
 ## Partyhub smali part
-```
+
+**You must compile with** ```--features partyhub``` **so it can be included in the native lib!!!!!**
+
+```smali
 .class public Lcom/razer/moonwave/Partyhub;
 .super Ljava/lang/Object;
 

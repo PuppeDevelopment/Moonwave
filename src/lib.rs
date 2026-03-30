@@ -4,7 +4,10 @@ mod hooking;
 mod opts;
 mod curl_hook;
 mod url;
-mod partyhub;
+
+#[cfg(feature = "partyhub")]
+pub mod partyhub;
+
 use log::info;
 use ctor::ctor;
 

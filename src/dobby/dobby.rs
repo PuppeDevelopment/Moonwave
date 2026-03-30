@@ -1,8 +1,8 @@
 // yes i ported dobby to rust how ud
 use core::ffi::{c_char, c_int, c_void};
 
-pub type addr_t = usize;
-pub type dobby_dummy_func_t = *mut c_void;
+pub type AddrT = usize;
+pub type DobbyDummyFuncT = *mut c_void;
 
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -17,13 +17,10 @@ pub union FPReg {
 pub struct DobbyRegisterContext {
     pub dummy_0: u64,
     pub sp: u64,
-
     pub dummy_1: u64,
     pub general: DobbyGeneralRegs,
-
     pub fp: u64,
     pub lr: u64,
-
     pub floating: DobbyFPRegs,
 }
 
@@ -53,14 +50,12 @@ pub union DobbyFPRegs {
     pub q: [FPReg; 32],
 }
 
-pub type DobbyInstrumentCallback =
-    extern "C" fn(address: *mut c_void, ctx: *mut DobbyRegisterContext);
-
+pub type DobbyInstrumentCallback = extern "C" fn(address: *mut c_void, ctx: *mut DobbyRegisterContext);
 unsafe extern "C" {
     pub fn DobbyHook(
         address: *mut c_void,
-        replace_func: dobby_dummy_func_t,
-        origin_func: *mut dobby_dummy_func_t,
+        replace_func: DobbyDummyFuncT,
+        origin_func: *mut DobbyDummyFuncT,
     ) -> c_int;
 
     // i ported ts for fun i only need DobbyHook lol
@@ -87,8 +82,8 @@ unsafe extern "C" {
     pub fn DobbyImportTableReplace(
         image_name: *mut c_char,
         symbol_name: *mut c_char,
-        fake_func: dobby_dummy_func_t,
-        orig_func: *mut dobby_dummy_func_t,
+        fake_func: DobbyDummyFuncT,
+        orig_func: *mut DobbyDummyFuncT,
     ) -> c_int;
 
     pub fn dobby_enable_near_branch_trampoline();

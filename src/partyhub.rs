@@ -1,3 +1,4 @@
+#![cfg(feature = "partyhub")]
 use jni::objects::JClass;
 use jni::sys::jstring;
 use jni::JNIEnv;
