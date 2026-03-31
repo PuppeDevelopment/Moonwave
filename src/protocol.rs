@@ -1,4 +1,4 @@
-use objc::runtime::{Class, Object, Sel, Imp};
+use objc::runtime::{Class, Object, Sel};
 use objc::{msg_send, sel, sel_impl};
 use crate::opts::{BACKEND_URL};
 use std::ffi::CString;
@@ -168,7 +168,7 @@ pub unsafe extern "C" fn start_loading(this: *mut Object, _cmd: Sel) {
 }
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn stop_loading(this: *mut Object, _cmd: Sel) {
+pub unsafe extern "C" fn stop_loading(_this: *mut Object, _cmd: Sel) {
     /*let task: *mut Object = msg_send![this, task];
     if !task.is_null() {
         let _: () = msg_send![task, cancel];

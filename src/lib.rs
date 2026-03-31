@@ -1,3 +1,4 @@
+#![allow(unexpected_cfgs)]
 use ctor::ctor;
 mod protocol;
 mod opts;
