@@ -3,6 +3,7 @@ use std::ffi::CString;
 use crate::opts;
 use crate::dobby::{DobbyHook, DobbySymbolResolver};
 use log::{error, info};
+use obfstr::obfstr;
 use crate::curl_hook::{eos_setopt_hook, fn_setopt_hook};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -17,7 +18,7 @@ pub unsafe fn init_ue_hook() {
 
     let curl_easy_setopt: *mut c_void;
     if opts::USE_CURL_SYMBOL {
-        curl_easy_setopt = unsafe { DobbySymbolResolver(CString::new("libUE4.so").unwrap().as_ptr(), CString::new("curl_easy_setopt").unwrap().as_ptr()) };
+        curl_easy_setopt = unsafe { DobbySymbolResolver(CString::new(obfstr!("libUE4.so")).unwrap().as_ptr(), CString::new(obfstr!("curl_easy_setopt")).unwrap().as_ptr()) };
         if curl_easy_setopt.is_null() {
             error!("Failed to find curl_easy_setopt symbol");
             return;
@@ -25,7 +26,7 @@ pub unsafe fn init_ue_hook() {
 
         info!("Found curl_easy_setopt at {:p}", curl_easy_setopt);
     } else {
-        let lib_name = CString::new("libUnreal.so").unwrap(); // change this to libUnreal.so if ur doing s19+ else change to libUE4.so
+        let lib_name = CString::new(obfstr!("libUnreal.so")).unwrap(); // change this to libUnreal.so if ur doing s19+ else change to libUE4.so
         let handle = unsafe { dlopen(lib_name.as_ptr(), 2) };
         if handle.is_null() {
             error!("Failed to load Unreal lib");
@@ -61,7 +62,7 @@ pub unsafe fn init_ue_hook() {
 pub unsafe fn init_eos_hook() {
     info!("Initializing EOS hook...");
 
-    let lib_name = CString::new("libEOSSDK.so").unwrap();
+    let lib_name = CString::new(obfstr!("libEOSSDK.so")).unwrap();
     let handle = unsafe { dlopen(lib_name.as_ptr(), 2) };
     if handle.is_null() {
         error!("Failed to load EOS lib");

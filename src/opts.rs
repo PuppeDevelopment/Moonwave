@@ -1,10 +1,20 @@
 #![allow(unused)]
+use obfstr::obfstr;
+use std::sync::LazyLock;
 
-pub const BACKEND_URL: &str = "http://192.168.1.69:8080"; // Set valid IP, not 127.0.0.1 for mobile
+pub static BACKEND_URL: LazyLock<String> = LazyLock::new(|| {
+    obfstr!("http://192.168.1.69:8080").to_string()
+});
+
 pub const USE_CURL_SYMBOL: bool = true; // disable this if 18.40+
 pub const USE_EOS: bool = false; // enable this if 22+
 pub const BYPASS_SSL: bool = false; // idk why u will use this its js for debugging with fiddler
 
 // Partyhub shit
-pub const LOGIN_URL: &str = "http://192.168.1.69:5000/login";
-pub const REGISTER_URL: &str = "http://192.168.1.69:5000/register";
+pub static LOGIN_URL: LazyLock<String> = LazyLock::new(|| {
+    obfstr!("http://192.168.1.69:5000/login").to_string()
+});
+
+pub static REGISTER_URL: LazyLock<String> = LazyLock::new(|| {
+    obfstr!("http://192.168.1.69:5000/register").to_string()
+});

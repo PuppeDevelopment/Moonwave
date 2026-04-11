@@ -21,8 +21,8 @@ Put **libmoonwave.so** and **libc++_shared.so** inside ``libs/arm64-v8a/`` in th
 .method public onCreate(Landroid/os/Bundle;)V
     .locals 11
     # if it doesnt exist on your apk you need this if it does don't do this and set v0 for moonwave
-+   const-string v1, "c++_shared"
-+   invoke-static {v1}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
++   const-string v0, "c++_shared"
++   invoke-static {v0}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
 
 +   const-string v1, "moonwave"
 +   invoke-static {v1}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V

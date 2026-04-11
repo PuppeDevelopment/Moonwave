@@ -30,11 +30,11 @@ pub extern "C" fn internal_setopt(handle: *mut c_void, option: c_int, arg: *mut 
             let url_cstr = CStr::from_ptr(arg as *const c_char);
             if let Ok(url_str) = url_cstr.to_str() {
                 let url = Url::parse_url(url_str);
-                info!("Original Host: {}\nOriginal Path and Query: {}", url.host, url.path_and_query);
+                // info!("Original Host: {}\nOriginal Path and Query: {}", url.host, url.path_and_query);
 
                 if Url::should_redirect(&url.host) {
-                    let redirected = Url::create_url(opts::BACKEND_URL, &url.path_and_query);
-                    info!("Redirected URL from {} to {}", url_str, redirected);
+                    let redirected = Url::create_url(opts::BACKEND_URL.as_str(), &url.path_and_query);
+                    // info!("Redirected URL from {} to {}", url_str, redirected);
 
                     return REDIRECT_BUF.with(|buf| {
                         let mut buf = buf.borrow_mut();
