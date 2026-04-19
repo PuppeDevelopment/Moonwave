@@ -1,7 +1,7 @@
 #![allow(unused_imports)]
 use std::cell::RefCell;
 use std::ffi::{CStr, CString, c_char};
-use std::os::raw::{c_int, c_void};
+use std::os::raw::{c_int, c_void, c_long};
 use log::info;
 use crate::opts;
 use crate::url::Url;
@@ -46,8 +46,8 @@ pub extern "C" fn internal_setopt(handle: *mut c_void, option: c_int, arg: *mut 
                     });
                 }
             }
-        } else if (option == 64 || option == 81) && opts::BYPASS_SSL {
-            return og_setopt(handle, option, std::ptr::null_mut());
+        } else if option == 64 && opts::BYPASS_SSL {
+            return og_setopt(handle, option, (0 as c_long) as usize as *mut c_void);
         }
 
         og_setopt(handle, option, arg)

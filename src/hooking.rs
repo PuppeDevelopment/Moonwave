@@ -31,7 +31,6 @@ pub unsafe fn init_ue_hook() {
         if handle.is_null() {
             error!("Failed to load Unreal lib");
             return;
-        
         }
 
         let base = get_module_base(lib_name.to_str().unwrap());
