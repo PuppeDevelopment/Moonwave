@@ -1,3 +1,5 @@
+## I Might do a better tutorial to this too, but this is way better than the iOS one that i will make better. iOS branch in [here](https://github.com/PuppeDevelopment/Moonwave/tree/iOS)
+
 # Moonwave - Android
 
 **Moonwave** is a **Fortnite** mobile redirect made to redirect **Epic Games** requests to a set **URL** by hooking **curl_easy_setopt** and the first ever mobile redirect made in **Rust** (let alone a Rust redirect but whatever).
