@@ -12,4 +12,4 @@
 
 ## How to build
 
-After you setup your **MacOS device** and **Rust** to build libraries run ``cargo build --release --target aarch64-apple-ios`` and you'll find it in ``target/aarch64-apple-ios/release/libmoonwave.dylib``, now you can inject it to an IPA.
+**There is a tutorial in [TUTORIAL.md](https://github.com/PuppeDevelopment/Moonwave/blob/iOS/TUTORIAL.md) file, you may follow to build and use Moonwave.**
